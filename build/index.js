@@ -10,15 +10,27 @@ dotenv_1.default.config();
 express_1.default.static.mime.define({
     "application/vnd.apple.pkpass": ["pkpass"],
 });
+express_1.default.static.mime.define({
+    "application/vnd-com.apple.pkpass": ["pkpass"],
+});
 const PORT = process.env.PORT || 3000;
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.all("/", (req, res) => {
-    return res.send("OK Request from " + req.ip);
+    return res.sendFile(__dirname + "/../index.html");
 });
 app.get("/pass/:passtype", (req, res) => {
     res.contentType("application/vnd.apple.pkpass");
-    res.setHeader("Content-type", "application/vnd.apple.pkpasses");
+    res.setHeader("Content-type", "application/vnd.apple.pkpass");
+    const passName = req.params.passtype + ".pkpass";
+    if (!fs_1.default.existsSync(__dirname + `/../SamplePasses/${passName}`))
+        return res.status(404).send("File not found");
+    const file = fs_1.default.readFileSync(__dirname + `/../SamplePasses/${passName}`);
+    return res.end(file);
+});
+app.get("/passfix/:passtype", (req, res) => {
+    res.contentType("application/vnd-com.apple.pkpass");
+    res.setHeader("Content-type", "application/vnd-com.apple.pkpass");
     const passName = req.params.passtype + ".pkpass";
     if (!fs_1.default.existsSync(__dirname + `/../SamplePasses/${passName}`))
         return res.status(404).send("File not found");

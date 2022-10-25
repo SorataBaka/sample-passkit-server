@@ -16,7 +16,7 @@ app.all("/", (req: Request, res: Response) => {
 });
 
 app.get("/pass/:passtype", (req: Request, res: Response) => {
-	res.contentType("application/vnd.apple.pkpasses");
+	res.contentType("application/vnd.apple.pkpass");
 	res.setHeader("Content-type", "application/vnd.apple.pkpasses");
 	const passName = req.params.passtype + ".pkpass";
 	if (!fs.existsSync(__dirname + `/../SamplePasses/${passName}`))

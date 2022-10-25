@@ -3,7 +3,7 @@ import fs from "fs";
 import dotenv from "dotenv";
 dotenv.config();
 express.static.mime.define({
-	"application/vnd.apple.pkpass": ["md"],
+	"application/vnd.apple.pkpass": ["pkpass"],
 });
 const PORT = process.env.PORT || 3000;
 

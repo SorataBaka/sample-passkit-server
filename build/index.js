@@ -8,7 +8,7 @@ const fs_1 = __importDefault(require("fs"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 express_1.default.static.mime.define({
-    "application/vnd.apple.pkpass": ["md"],
+    "application/vnd.apple.pkpass": ["pkpass"],
 });
 const PORT = process.env.PORT || 3000;
 const app = (0, express_1.default)();

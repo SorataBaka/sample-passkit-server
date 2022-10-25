@@ -7,16 +7,23 @@ const express_1 = __importDefault(require("express"));
 const fs_1 = __importDefault(require("fs"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
+express_1.default.static.mime.define({
+    "application/vnd.apple.pkpass": ["md"],
+});
 const PORT = process.env.PORT || 3000;
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.all("/", (req, res) => {
     return res.send("OK Request from " + req.ip);
 });
-const passkitFile = fs_1.default.readFileSync(__dirname + "/../SamplePasses/BoardingPass.pkpass");
-app.get("/pass", (req, res) => {
+app.get("/pass/:passtype", (req, res) => {
     res.contentType("application/vnd.apple.pkpasses");
-    return res.end(passkitFile);
+    res.setHeader("Content-type", "application/vnd.apple.pkpasses");
+    const passName = req.params.passtype + ".pkpass";
+    if (!fs_1.default.existsSync(__dirname + `/../SamplePasses/${passName}`))
+        return res.status(404).send("File not found");
+    const file = fs_1.default.readFileSync(__dirname + `/../SamplePasses/${passName}`);
+    return res.end(file);
 });
 app.listen(PORT, () => {
     console.log("Server listening on port " + PORT);
